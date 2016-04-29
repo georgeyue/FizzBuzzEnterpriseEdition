@@ -3,23 +3,22 @@ package com.seriouscompany.business.java.fizzbuzz.packagenamingpackage.impl.stra
 import com.seriouscompany.business.java.fizzbuzz.packagenamingpackage.interfaces.strategies.FizzBuzzOutputStrategy;
 import com.seriouscompany.business.java.fizzbuzz.packagenamingpackage.interfaces.strategies.FizzBuzzExceptionSafeOutputStrategy;
 
-public class FizzBuzzOutputStrategyToFizzBuzzExceptionSafeOutputStrategyAdapter implements FizzBuzzExceptionSafeOutputStrategy {
+public final class FizzBuzzOutputStrategyToFizzBuzzExceptionSafeOutputStrategyAdapter implements FizzBuzzExceptionSafeOutputStrategy {
 
-	public FizzBuzzOutputStrategyToFizzBuzzExceptionSafeOutputStrategyAdapter(
-				FizzBuzzOutputStrategy fizzBuzzOutputStrategyToAdapt)
-	{
-		myFizzBuzzOutputStrategyToAdapt = fizzBuzzOutputStrategyToAdapt;	
+	private  final FizzBuzzOutputStrategy _fizzBuzzOutputStrategy;
+	
+	public FizzBuzzOutputStrategyToFizzBuzzExceptionSafeOutputStrategyAdapter(final FizzBuzzOutputStrategy fizzBuzzOutputStrategy) {
+		this._fizzBuzzOutputStrategy = fizzBuzzOutputStrategy;
 	}
 
 	@Override
-	public void output(String outputStringToOutput) {
+	public void output(final String outputStringToOutput) {
 		try {
-			myFizzBuzzOutputStrategyToAdapt.output(outputStringToOutput);
-		} catch (Exception exceptionFromDoingOutput) {
+			this._fizzBuzzOutputStrategy.output(outputStringToOutput);
+		} catch (final Exception exceptionFromDoingOutput) {
 			// We're the enterprise...we don't get exceptions!
+		} catch (final Throwable throwableFromDoingOutput) {
+			// We're the enterprise...we don't get throwables either!
 		}
 	}
-
-	final FizzBuzzOutputStrategy myFizzBuzzOutputStrategyToAdapt;
-
 }

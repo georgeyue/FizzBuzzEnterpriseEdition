@@ -1,22 +1,28 @@
 package com.seriouscompany.business.java.fizzbuzz.packagenamingpackage.impl.strategies;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.seriouscompany.business.java.fizzbuzz.packagenamingpackage.interfaces.loop.LoopPayloadExecution;
 import com.seriouscompany.business.java.fizzbuzz.packagenamingpackage.interfaces.loop.LoopContextStateRetrieval;
+import com.seriouscompany.business.java.fizzbuzz.packagenamingpackage.interfaces.strategies.OutputGenerationStrategy;
 import com.seriouscompany.business.java.fizzbuzz.packagenamingpackage.impl.strategies.adapters.LoopContextStateRetrievalToSingleStepOutputGenerationAdapter;
 
+@Service
 public class SingleStepPayload implements LoopPayloadExecution {
 
-	SingleStepOutputGenerationStrategy myGenerator;
+	private final OutputGenerationStrategy _outputGenerationStrategy;
 
-	public SingleStepPayload() {
-		myGenerator = new SingleStepOutputGenerationStrategy();
+	@Autowired
+	public SingleStepPayload(final OutputGenerationStrategy _outputGenerationStrategy) {
+		this._outputGenerationStrategy = _outputGenerationStrategy;
 	}
 
 	@Override
-	public void runLoopPayload(LoopContextStateRetrieval stateRetrieval) {
+	public void runLoopPayload(final LoopContextStateRetrieval stateRetrieval) {
 		final LoopContextStateRetrievalToSingleStepOutputGenerationAdapter adapter =
-			new LoopContextStateRetrievalToSingleStepOutputGenerationAdapter(stateRetrieval);
-		myGenerator.performGenerationForCurrentStep(adapter);
+				new LoopContextStateRetrievalToSingleStepOutputGenerationAdapter(stateRetrieval);
+		this._outputGenerationStrategy.performGenerationForCurrentStep(adapter);
 	}
 
 }

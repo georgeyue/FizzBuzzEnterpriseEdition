@@ -1,35 +1,40 @@
 package com.seriouscompany.business.java.fizzbuzz.packagenamingpackage.impl.printers;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.seriouscompany.business.java.fizzbuzz.packagenamingpackage.impl.factories.BuzzStringReturnerFactory;
 import com.seriouscompany.business.java.fizzbuzz.packagenamingpackage.impl.factories.SystemOutFizzBuzzOutputStrategyFactory;
-import com.seriouscompany.business.java.fizzbuzz.packagenamingpackage.interfaces.factories.FizzBuzzOutputStrategyFactory;
-import com.seriouscompany.business.java.fizzbuzz.packagenamingpackage.interfaces.factories.StringStringReturnerFactory;
 import com.seriouscompany.business.java.fizzbuzz.packagenamingpackage.interfaces.printers.StringPrinter;
-import com.seriouscompany.business.java.fizzbuzz.packagenamingpackage.interfaces.strategies.FizzBuzzOutputStrategy;
 import com.seriouscompany.business.java.fizzbuzz.packagenamingpackage.interfaces.stringreturners.StringStringReturner;
 import com.seriouscompany.business.java.fizzbuzz.packagenamingpackage.impl.strategies.adapters.FizzBuzzOutputStrategyToFizzBuzzExceptionSafeOutputStrategyAdapter;
 
+@Service
 public class BuzzStringPrinter implements StringPrinter {
 
-	private final FizzBuzzOutputStrategy outputStrategy;
+	private final SystemOutFizzBuzzOutputStrategyFactory _outputStrategyFactory;
 
-	public BuzzStringPrinter() {
-		FizzBuzzOutputStrategyFactory factory = new SystemOutFizzBuzzOutputStrategyFactory();
-		this.outputStrategy = factory.createOutputStrategy();
+	private final BuzzStringReturnerFactory _buzzStringReturnerFactory;
+
+	@Autowired
+	public BuzzStringPrinter(final BuzzStringReturnerFactory _buzzStringReturnerFactory,
+			final SystemOutFizzBuzzOutputStrategyFactory _outputStrategyFactory) {
+		this._buzzStringReturnerFactory = _buzzStringReturnerFactory;
+		this._outputStrategyFactory = _outputStrategyFactory;
 	}
 
 	public void print() {
-		final StringStringReturnerFactory myBuzzStringReturnerFactory = new BuzzStringReturnerFactory();
-		final StringStringReturner myBuzzStringReturner = myBuzzStringReturnerFactory
-				.createStringStringReturner();
+		final StringStringReturner myBuzzStringReturner = this._buzzStringReturnerFactory
+			.createStringStringReturner();
 		final FizzBuzzOutputStrategyToFizzBuzzExceptionSafeOutputStrategyAdapter myOutputAdapter =
-				new FizzBuzzOutputStrategyToFizzBuzzExceptionSafeOutputStrategyAdapter(outputStrategy);
+				new FizzBuzzOutputStrategyToFizzBuzzExceptionSafeOutputStrategyAdapter(
+						this._outputStrategyFactory.createOutputStrategy());
 
 		myOutputAdapter.output(myBuzzStringReturner.getReturnString());
 	}
 
 	@Override
-	public void printValue(Object value) {
-		print();
+	public void printValue(final Object value) {
+		this.print();
 	}
 }
